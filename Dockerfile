@@ -1,12 +1,11 @@
-# Étape de build
-FROM maven:3.8.5-eclipse-temurin-17 AS build
+# Étape 1 : Build l'application avec Maven (tu peux adapter si tu utilises Gradle)
+FROM maven:3.8.6-amazoncorretto-17 AS build
 WORKDIR /app
-COPY pom.xml .
-COPY src ./src
+COPY . .
 RUN mvn clean package -DskipTests
- 
-# Étape de production
-FROM openjdk:17-jdk-slim
+
+# Étape 2 : Exécuter le .jar généré
+FROM amazoncorretto:17
 WORKDIR /app
 COPY --from=build /app/target/*.jar app.jar
 EXPOSE 8080
